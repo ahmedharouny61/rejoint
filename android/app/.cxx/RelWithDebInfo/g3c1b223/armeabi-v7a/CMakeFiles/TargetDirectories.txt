@@ -1,0 +1,2 @@
+C:/Users/User/Videos/graduation_project2.1/graduation_project2.1/graduation_project2.1/graduation_project2/graduation_project2/android/app/.cxx/RelWithDebInfo/g3c1b223/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/User/Videos/graduation_project2.1/graduation_project2.1/graduation_project2.1/graduation_project2/graduation_project2/android/app/.cxx/RelWithDebInfo/g3c1b223/armeabi-v7a/CMakeFiles/rebuild_cache.dir

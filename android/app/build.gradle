@@ -1,0 +1,79 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+plugins {
+    id "com.android.application"
+    id "com.google.gms.google-services" // FlutterFire
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace "com.example.graduation_project2"
+
+     compileSdk = 35
+
+    defaultConfig {
+        applicationId "com.example.graduation_project2"
+        minSdk = 23
+        targetSdk = 35
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+
+        
+       
+    }
+signingConfigs {
+    release {
+        def keystoreProperties = new Properties()
+        def keystorePropertiesFile = rootProject.file('key.properties')
+        if (keystorePropertiesFile.exists()) {
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        }
+
+        keyAlias keystoreProperties['keyAlias']
+        keyPassword keystoreProperties['keyPassword']
+       storeFile file(keystoreProperties['storeFile'])
+
+        storePassword keystoreProperties['storePassword']
+    }
+}
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+          proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+       jvmTarget = '17'
+    }
+
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    // Firebase BoM (BOM = Bill of Materials)
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+
+    // Firebase libraries you use
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // Your other dependencies
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+}
