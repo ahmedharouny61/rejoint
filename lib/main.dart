@@ -15,6 +15,7 @@ import 'package:graduation_project2/widgets/notification_helper.dart';
 import 'package:graduation_project2/widgets/profile_screen.dart';
 import 'package:graduation_project2/widgets/signup.dart';
 import 'package:graduation_project2/widgets/video_player_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,7 +74,11 @@ class MainWrapper extends StatefulWidget {
   @override
   State<MainWrapper> createState() => _MainWrapperState();
 }
-
+    void requestPermissions() async {
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
+}
 class _MainWrapperState extends State<MainWrapper> {
   int _selectedIndex = 0;
 
@@ -85,6 +90,7 @@ class _MainWrapperState extends State<MainWrapper> {
   @override
   void initState() {
     super.initState();
+requestPermissions();
     NotificationHelper.scheduleDailyNotification(
       'Reminder',
       'Time to do your knee exercises!',

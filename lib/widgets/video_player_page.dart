@@ -215,6 +215,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 203, 199, 229),
         title: Text(widget.exerciseName),
         actions: [
           IconButton(

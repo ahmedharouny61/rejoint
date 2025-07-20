@@ -204,7 +204,7 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 248, 235, 1),
-      appBar: AppBar(title: const Text('Knee Osteoarthritis Survey')),
+      appBar: AppBar(title: const Text('Knee Osteoarthritis Survey'),backgroundColor: Color.fromARGB(255, 203, 199, 229),),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Container(
