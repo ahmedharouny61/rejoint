@@ -26,7 +26,7 @@ class _DisclaimerGateState extends State<DisclaimerGate> {
             body: DisclaimerPage(),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
-                setState(() => _agreed = true);
+                Navigator.of(context).pushReplacementNamed('/auth');
               },
               label: const Text('I Agree'),
               icon: const Icon(Icons.check),

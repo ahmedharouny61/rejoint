@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graduation_project2/admin/admin_wrapper.dart';
 import 'package:graduation_project2/firebase_options.dart';
-
+import 'package:graduation_project2/widgets/auth_page.dart';
 
 import 'package:graduation_project2/widgets/disclaimer_gate.dart';
 import 'package:graduation_project2/widgets/disclaimer_page.dart';
@@ -29,8 +29,6 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-
-
   runApp(
     MyApp(),
   );
@@ -47,9 +45,9 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-     routes: {
-      '/': (context) => const DisclaimerGate(),
-   '/video': (context) {
+      routes: {
+        '/': (context) => const DisclaimerGate(),
+        '/video': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments as Map<String, String>;
           return VideoPlayerPage(
@@ -57,13 +55,14 @@ class MyApp extends StatelessWidget {
             exerciseName: args['exerciseName']!,
           );
         },
-  '/admin': (context) => const AdminWrapper(),
-  '/home': (context) => const MainWrapper(),
-  '/survey': (context) => const KneeSurveyPage(),
-  '/signup': (context) => Signup(),
-'/login': (context) => Login(),
-'/disclaimer': (context) => const DisclaimerPage(),
-},
+        '/auth': (context) => const AuthPage(), // New route for after agreement
+        '/admin': (context) => const AdminWrapper(),
+        '/home': (context) => const MainWrapper(),
+        '/survey': (context) => const KneeSurveyPage(),
+        '/signup': (context) => Signup(),
+        '/login': (context) => Login(),
+        '/disclaimer': (context) => const DisclaimerPage(),
+      },
     );
   }
 }
@@ -107,7 +106,7 @@ class _MainWrapperState extends State<MainWrapper> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: Color.fromARGB(255, 203, 199, 229),
-        selectedItemColor:  Color(0xFF4169E1),
+        selectedItemColor: Color(0xFF4169E1),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
