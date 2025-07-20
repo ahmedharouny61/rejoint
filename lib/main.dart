@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:graduation_project2/admin/admin_wrapper.dart';
 import 'package:graduation_project2/firebase_options.dart';
 
-import 'package:graduation_project2/widgets/auth_page.dart';
+
+import 'package:graduation_project2/widgets/disclaimer_gate.dart';
+import 'package:graduation_project2/widgets/disclaimer_page.dart';
 import 'package:graduation_project2/widgets/exercise_home_screen.dart';
 import 'package:graduation_project2/widgets/home_screen.dart';
 import 'package:graduation_project2/widgets/knee_survey_page.dart';
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
      routes: {
-  '/': (context) => const AuthPage(),
+      '/': (context) => const DisclaimerGate(),
    '/video': (context) {
           final args =
               ModalRoute.of(context)!.settings.arguments as Map<String, String>;
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
   '/survey': (context) => const KneeSurveyPage(),
   '/signup': (context) => Signup(),
 '/login': (context) => Login(),
+'/disclaimer': (context) => const DisclaimerPage(),
 },
     );
   }
