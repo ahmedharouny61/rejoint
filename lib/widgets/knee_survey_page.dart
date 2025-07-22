@@ -34,7 +34,7 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
   String? xrayFindings;
 
   // Default values for dropdowns
-  final List<String> genderOptions = ['Male', 'Female', 'Other'];
+  final List<String> genderOptions = ['Male', 'Female'];
   final List<String> walkingSeverityOptions = ['Mild', 'Moderate', 'Severe'];
   final List<String> kneeSwellingOptions = ['Yes', 'No'];
   final List<String> assistiveDeviceOptions = ['None', 'Walker', 'Wheelchair'];
@@ -127,40 +127,54 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
     }
   }
 
-  Widget buildNumberInput(
-    String label,
-    TextEditingController controller,
-    int min,
-    int max, {
-    required Color borderColor,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 2.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 2.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 2.0),
-            ),
-            hintText: 'Enter value between $min-$max',
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+Widget buildNumberInput(
+  String label,
+  TextEditingController controller,
+  int min,
+  int max, {
+  required Color borderColor,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(label, style: const TextStyle(fontSize: 16)),
+      const SizedBox(height: 8),
+      TextFormField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: borderColor, width: 2.0),
           ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: borderColor, width: 2.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: borderColor, width: 2.0),
+          ),
+          hintText: 'Enter value between $min-$max',
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          }
+          final parsed = int.tryParse(value);
+          if (parsed == null) {
+            return 'Please enter a valid number';
+          }
+          if (parsed < min || parsed > max) {
+            return 'Value must be between $min and $max';
+          }
+          return null;
+        },
+      ),
+      const SizedBox(height: 16),
+    ],
+  );
+}
+
 
   Widget buildDropdown(
     String label,
@@ -174,27 +188,30 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
       children: [
         Text(label, style: const TextStyle(fontSize: 16)),
         const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          value: value,
-          items: options.map((String option) {
-            return DropdownMenuItem<String>(
-              value: option,
-              child: Text(option),
-            );
-          }).toList(),
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 2.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 2.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor, width: 2.0),
-            ),
-          ),
-        ),
+    DropdownButtonFormField<String>(
+  value: value,
+  items: options.map((String option) {
+    return DropdownMenuItem<String>(
+      value: option,
+      child: Text(option),
+    );
+  }).toList(),
+  onChanged: onChanged,
+  validator: (value) =>
+      value == null || value.isEmpty ? 'Please select an option' : null,
+  decoration: InputDecoration(
+    border: OutlineInputBorder(
+      borderSide: BorderSide(color: borderColor, width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: borderColor, width: 2.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: borderColor, width: 2.0),
+    ),
+  ),
+),
+
         const SizedBox(height: 16),
       ],
     );
@@ -251,10 +268,10 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
                   borderColor: Color(0xFF4682B4),
                 ),
                 buildNumberInput(
-                  "6. Age (1-120)",
+                  "6. Age (10-90)",
                   ageController,
                   1,
-                  120,
+                  90,
                   borderColor: Color(0xFF4682B4),
                 ),
                 buildNumberInput(
@@ -272,7 +289,7 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
                   borderColor: Color(0xFF4682B4),
                 ),
                 buildNumberInput(
-                  "9. Functional Score (0-100)",
+                  "9. ability Score (0-100)",
                   functionalScoreController,
                   0,
                   100,

@@ -86,8 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                
-                
+
                 const SizedBox(height: 20),
 
                 // Your recommendation card (same as before)
@@ -131,14 +130,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          OutlinedButton.icon(
-                            onPressed: () =>
+                          GestureDetector(
+                            onTap: () =>
                                 Navigator.pushNamed(context, '/survey'),
-                            icon: const Icon(Icons.arrow_forward,
-                                color: Colors.indigo),
-                            label: const Text(
-                              'Recommend Video',
-                              style: TextStyle(color: Colors.indigo),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'start',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 13, 13, 13),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 35,
+                                ),
+                              ),
                             ),
                           ),
                         ],
