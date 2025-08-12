@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "621264361715",
+    "firebase_url": "https://graduationproject-3a74a-default-rtdb.firebaseio.com",
     "project_id": "graduationproject-3a74a",
     "storage_bucket": "graduationproject-3a74a.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.graduation_project2"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "621264361715-4h50eran0j4hfjrlhp11s54cnmvhdfa3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.graduation_project2",
+            "certificate_hash": "61d9ce45bb888a2206e061d5abf9bc47d431e245"
+          }
+        },
+        {
+          "client_id": "621264361715-pv7gsjf66iqq1qj0f6tuorikdelsasf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDaVOquD7KnH5W6_gMiz0ik5F_9HDl43mE"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "621264361715-pv7gsjf66iqq1qj0f6tuorikdelsasf3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "621264361715-v67rjsm42h4ut8gt75e9tqvma43unssn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.graduationProject2"
+              }
+            }
+          ]
         }
       }
     }

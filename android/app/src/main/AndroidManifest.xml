@@ -14,7 +14,9 @@
         android:label="rejoint"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
+  <meta-data
+        android:name="com.google.android.gms.client.id"
+        android:value="1234567890-abcdefghijklmno.apps.googleusercontent.com" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

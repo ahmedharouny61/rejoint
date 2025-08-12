@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduation_project2/widgets/login.dart';
 
 class Signup extends StatefulWidget {
- // In Signup
+  // In Signup
 
-const Signup({super.key});
-
+  const Signup({super.key});
 
   @override
   State<Signup> createState() => _SignupState();
@@ -79,26 +79,45 @@ class _SignupState extends State<Signup> {
                   icon: const Icon(Icons.lock_open),
                   label: const Text('Sign Up'),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 7),
+ElevatedButton.icon(
+  onPressed: signUpWithGoogle,
+  icon: Image.asset(
+    'assets/images/google_logo.png', // Add this logo to your assets
+    height: 24,
+  ),
+  label: const Text(
+    'Sign Up with Google',
+    style: TextStyle(fontWeight: FontWeight.bold),
+  ),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.white,
+    foregroundColor: const Color.fromARGB(255, 95, 41, 121),
+    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+    elevation: 2,
+  ),
+),
+                const SizedBox(height: 7),
                 RichText(
                   text: TextSpan(
                     style: const TextStyle(color: Colors.white, fontSize: 20),
                     text: 'Already have an account? ',
                     children: [
-                  TextSpan(
-  recognizer: TapGestureRecognizer()
-    ..onTap = () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Login()),
-      );
-    },
-  text: ' Log in',
-  style: TextStyle(
-    decoration: TextDecoration.underline,
-    color: Color.fromARGB(255, 236, 119, 245),
-  ),
-),
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Login()),
+                            );
+                          },
+                        text: ' Log in',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Color.fromARGB(255, 236, 119, 245),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -109,6 +128,51 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
+Future<void> signUpWithGoogle() async {
+  try {
+    showLoadingDialog();
+
+    // Trigger the Google Sign-In flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) {
+      Navigator.of(context).pop(); // user cancelled
+      return;
+    }
+
+    // Get Google authentication
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Sign in with Firebase
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    // If it's a new user, create Firestore profile
+    if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'email': userCredential.user!.email,
+        'username': userCredential.user!.displayName ?? '',
+        'role': 'user',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    Navigator.of(context).pop(); // close loading
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+  } catch (e) {
+    Navigator.of(context).pop();
+    showSnackBar("Google sign-in failed: $e");
+  }
+}
 
   Future<void> signUp() async {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
@@ -129,14 +193,14 @@ class _SignupState extends State<Signup> {
       // 2. Auto-create Firestore document
       if (userCredential.user != null) {
         await FirebaseFirestore.instance
-    .collection('users')
-    .doc(userCredential.user!.uid)
-    .set({
-      'email': userCredential.user!.email,
-      'username': usernameController.text.trim(),
-      'role': 'user',
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'email': userCredential.user!.email,
+          'username': usernameController.text.trim(),
+          'role': 'user',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
       }
 
       // 3. Navigate to home
@@ -167,4 +231,5 @@ class _SignupState extends State<Signup> {
       SnackBar(content: Text(message)),
     );
   }
+  
 }

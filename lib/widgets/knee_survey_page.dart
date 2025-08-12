@@ -32,6 +32,7 @@ class _KneeSurveyPageState extends State<KneeSurveyPage> {
   String? walkingSeverity;
   String? assistiveDevice;
   String? xrayFindings;
+  bool showAbilityInfo = false;
 
   // Default values for dropdowns
   final List<String> genderOptions = ['Male', 'Female'];
@@ -133,12 +134,43 @@ Widget buildNumberInput(
   int min,
   int max, {
   required Color borderColor,
+  String? infoText,
+  bool showInfo = false,
+  VoidCallback? onInfoTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(label, style: const TextStyle(fontSize: 16)),
-      const SizedBox(height: 8),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 16),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (infoText != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 4), // tighter to label
+              child: GestureDetector(
+                onTap: onInfoTap,
+                child: const Icon(Icons.info_outline,
+                    size: 18, color: Colors.blue),
+              ),
+            ),
+        ],
+      ),
+      if (showInfo && infoText != null)
+        Padding(
+          padding: const EdgeInsets.only(left: 4, top: 4, bottom: 8), // small gap
+          child: Text(
+            infoText,
+            style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w300, color: Color.fromARGB(255, 14, 1, 1)),
+          ),
+        ),
+        const SizedBox(height: 8),
       TextFormField(
         controller: controller,
         keyboardType: TextInputType.number,
@@ -170,7 +202,7 @@ Widget buildNumberInput(
           return null;
         },
       ),
-      const SizedBox(height: 16),
+      const SizedBox(height: 12), // slightly smaller than 16
     ],
   );
 }
@@ -227,6 +259,7 @@ Widget buildNumberInput(
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(color: Color.fromRGBO(10, 35, 66, 1))),
+          padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
             child: Column(
@@ -294,6 +327,14 @@ Widget buildNumberInput(
                   0,
                   100,
                   borderColor: Color(0xFF4682B4),
+                infoText:
+      "Ability score measures how well you can perform daily activities like walking, climbing stairs, or standing for long periods. 0 means no ability, 100 means full ability.",
+  showInfo: showAbilityInfo,
+  onInfoTap: () {
+    setState(() {
+      showAbilityInfo = !showAbilityInfo; // toggle visibility
+    });
+  },
                 ),
                 const SizedBox(height: 24),
                 Center(

@@ -1,15 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graduation_project2/services/user_service.dart';
+import 'package:graduation_project2/services/google_signin_service.dart';
 import 'package:graduation_project2/widgets/signup.dart';
 
-
 class Login extends StatefulWidget {
-  
-const Login({super.key});
+  const Login({super.key});
   @override
   State<Login> createState() => _LoginState();
 }
@@ -43,17 +41,20 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 40),
                 TextField(
                   controller: emailController,
-                  style: const TextStyle(color:   Color.fromARGB(255, 236, 119, 245)), // White text
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 236, 119, 245)), // White text
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                       labelText: 'email',
-                      labelStyle: TextStyle(color: const Color.fromARGB(255, 243, 233, 233))),
+                      labelStyle: TextStyle(
+                          color: const Color.fromARGB(255, 243, 233, 233))),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 7),
                 TextField(
                   controller: passwordController,
                   textInputAction: TextInputAction.done,
-                  style: const TextStyle(color:   Color.fromARGB(255, 236, 119, 245)), // pink text
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 236, 119, 245)), // pink text
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'password',
@@ -65,10 +66,38 @@ class _LoginState extends State<Login> {
                   onPressed: signin,
                   icon: Icon(Icons.lock_open),
                   label: Text('Sign In'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white, // same as Google button
+                    foregroundColor: const Color.fromARGB(
+                        255, 95, 41, 121), // same text color
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                    
+                    elevation: 2, // same subtle shadow
+                  ),
                 ),
-                SizedBox(
-                  height: 24,
+                SizedBox(height: 7,),
+                ElevatedButton(
+                  onPressed: () {
+                    GoogleSignInService.signInWithGoogle();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color.fromARGB(255, 95, 41, 121),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/images/google_logo.png',
+                        height: 24,
+                      ),
+                      SizedBox(width: 12),
+                      Text('Sign in with Google'),
+                    ],
+                  ),
                 ),
+                SizedBox(height: 7,),
                 RichText(
                   text: TextSpan(
                     style: TextStyle(color: Colors.white, fontSize: 20),
@@ -77,16 +106,16 @@ class _LoginState extends State<Login> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
- Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Signup()),
-      );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Signup()),
+                            );
                           },
                         text: 'Sign Up',
                         style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color:  const Color.fromARGB(255, 236, 119, 245)
-                        ),
+                            decoration: TextDecoration.underline,
+                            color: const Color.fromARGB(255, 236, 119, 245)),
                       ),
                     ],
                   ),
@@ -100,60 +129,55 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signin() async {
-  if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Please enter email and password")),
-    );
-    return;
-  }
-
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) => const Center(child: CircularProgressIndicator()),
-  );
-
-  try {
-     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
-  Navigator.of(context).pop(); // Remove loading dialog
-  // Check if the user is admin
-    final isAdmin = await UserService.isAdmin();
-
-  
-
-  
-
-    if (isAdmin) {
-      Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
-    } else {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter email and password")),
+      );
+      return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Login successful")),
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-  } on FirebaseAuthException catch (e) {
-    Navigator.of(context).pop(); // Dismiss loading indicator
 
-    String message = "An error occurred";
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      Navigator.of(context).pop(); // Remove loading dialog
+      // Check if the user is admin
+      final isAdmin = await UserService.isAdmin();
 
-    if (e.code == 'user-not-found') {
-      message = "No user found for this email.";
-    } else if (e.code == 'wrong-password') {
-      message = "Incorrect password. Try again.";
-    } else if (e.code == 'invalid-email') {
-      message = "Invalid email format.";
-    } else {
-      message = e.message ?? "Login failed.";
+      if (isAdmin) {
+        Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login successful")),
+      );
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop(); // Dismiss loading indicator
+
+      String message = "An error occurred";
+
+      if (e.code == 'user-not-found') {
+        message = "No user found for this email.";
+      } else if (e.code == 'wrong-password') {
+        message = "Incorrect password. Try again.";
+      } else if (e.code == 'invalid-email') {
+        message = "Invalid email format.";
+      } else {
+        message = e.message ?? "Login failed.";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
   }
-}
-
 }
